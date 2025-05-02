@@ -46,6 +46,13 @@ else
 fi
 echo # Add a newline for separation
 
+# # --- 0. Attempt to delete existing queued resource (ignore errors if not found) ---
+# echo "Attempting to delete existing queued resource ${TPU_NAME}..."
+# gcloud compute tpus queued-resources delete ${TPU_NAME} \
+#     --project ${GCP_PROJECT} \
+#     --zone ${ZONE} \
+#     --quiet || true # Continue even if delete fails (e.g., resource not found)
+
 # --- 1. Request Queued Resource ---
 echo "Requesting TPU Queued Resource: ${TPU_NAME} (${ACCELERATOR_TYPE}) in ${ZONE}..."
 gcloud compute tpus queued-resources create ${TPU_NAME} \
@@ -65,15 +72,18 @@ echo "Queued resource request submitted. Waiting for allocation..."
 
 # --- 2. Wait Loop ---
 while true; do
+    # Construct the full resource name for filtering
+    FULL_RESOURCE_NAME="projects/${GCP_PROJECT}/locations/${ZONE}/queuedResources/${TPU_NAME}"
+
     # Use 'alpha' for queued-resources list and extract the state
-    # The state might be nested, adjust the query if needed based on gcloud output format
+    # Filter using the full resource name identifier
     TPU_STATE=$(gcloud alpha compute tpus queued-resources list \
         --project ${GCP_PROJECT} \
         --zone ${ZONE} \
-        --filter="name=${TPU_NAME}" \
-        --format="value(state)") # Or potentially state.state depending on gcloud version/output
+        --filter="name=${FULL_RESOURCE_NAME}" \
+        --format="value(state.state)") # Use state.state for potentially nested state info
 
-    # Check if state is empty or indicates an issue (optional, adjust as needed)
+    # Check if state is empty or indicates an issue
     if [[ -z "$TPU_STATE" ]]; then
        echo "Could not retrieve TPU state. Waiting and retrying..."
        sleep 60
