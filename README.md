@@ -6,7 +6,7 @@ Currently, it includes support for Google Cloud TPUs using the [EasyDeL](https:/
 
 **Future Goals:**
 
-*   Add support for NVIDIA GPUs using frameworks like [TRL](https://github.com/huggingface/trl).
+*   Add support for NVIDIA GPUs using frameworks like [TRL](https://github.com/huggingface/trl). (Partially Implemented - See CUDA section)
 *   Add support for AMD MI300X GPUs (likely using TRL or similar ROCm-compatible frameworks).
 
 ## Current TPU Workflow (EasyDeL)
@@ -104,6 +104,54 @@ Run the scripts in sequence from the root directory of the repository:
 *   `03_grpo_test_run.sh`: Runs a sample GRPO training job.
 *   `grpo_explained.md`: Detailed explanation of GRPO concepts within EasyDeL.
 *   `.env.example`: Template for the required environment variables.
+
+## CUDA/GPU Workflow (TRL - WIP)
+
+This section outlines the setup for running GRPO fine-tuning on NVIDIA GPUs. It currently focuses on dependency installation.
+
+### Prerequisites
+
+1.  **NVIDIA Driver**: Ensure you have a compatible NVIDIA driver installed. [NVIDIA Driver Downloads](https://www.nvidia.com/Download/index.aspx)
+2.  **CUDA Toolkit**: Install the CUDA Toolkit (version 12.1 or compatible with your driver and PyTorch build). [CUDA Toolkit Archive](https://developer.nvidia.com/cuda-toolkit-archive)
+3.  **Python Environment**: A Python 3 environment (e.g., 3.10 or later) is recommended. Use a virtual environment.
+4.  **`pip`**: Ensure `pip` is up-to-date (`pip install --upgrade pip`).
+
+### Local Setup
+
+It's highly recommended to use a virtual environment:
+
+```bash
+# 1. Create a virtual environment (if you don't have one)
+python -m venv venv  # Or use python3
+
+# 2. Activate the environment
+# On Linux/macOS:
+source venv/bin/activate
+# On Windows (Git Bash/WSL):
+# source venv/Scripts/activate
+# On Windows (CMD/PowerShell):
+# venv\Scripts\activate.bat  OR  venv\Scripts\Activate.ps1
+
+# 3. Ensure pip is updated
+pip install --upgrade pip
+```
+
+### Usage
+
+Run the installation script from the root directory:
+
+1.  **Install Dependencies:**
+    ```bash
+    bash cuda/10_cuda_install.sh
+    ```
+    This script installs PyTorch (pinned to 2.5.1 for CUDA 12.1), `flash-attn` (pinned to 2.7.4.post1 for pre-built wheels), `trl`, `transformers`, and other necessary libraries.
+
+*(Note: Training scripts using these dependencies are under development.)*
+
+### Included Files (`cuda/` directory)
+
+*   `10_cuda_install.sh`: Installs dependencies for the CUDA environment.
+*   `grpo_finetune.py`: (Placeholder/WIP) Script for running the actual fine-tuning.
 
 ## Contributing
 
