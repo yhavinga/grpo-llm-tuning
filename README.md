@@ -151,7 +151,7 @@ Run the installation script from the root directory:
 ### Included Files (`cuda/` directory)
 
 *   `10_cuda_install.sh`: Installs dependencies for the CUDA environment.
-*   `grpo_finetune.py`: (Placeholder/WIP) Script for running the actual fine-tuning.
+*   `grpo_finetune_trl.py`: (Placeholder/WIP) Script for running the actual fine-tuning.
 
 ## Contributing
 

@@ -1,0 +1,8 @@
+unsloth==2025.4.7
+unsloth_zoo==2025.4.4
+triton==3.2.0
+vllm==0.8.2
+transformers==4.51.3
+bitsandbytes==0.45.5
+tokenizers==0.21.1
+datasets==3.2.0
